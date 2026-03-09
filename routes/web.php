@@ -1,9 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\TravelNoteController;
-use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,30 +8,35 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Redirect root to travel notes index
+// Beranda dialihkan ke daftar catatan
 Route::get('/', function () {
-    return redirect()->route('travel-notes.index');
+    return redirect('/travel-notes');
 });
 
-// ── Authentication Routes ──────────────────────────────────────────────────
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
+// Rute Autentikasi (Hanya View)
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
 
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
-});
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
 
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+// Rute Catatan Perjalanan (Hanya View)
+Route::group(['prefix' => 'travel-notes'], function () {
+    Route::get('/', function () {
+        return view('travel-notes.index');
+    })->name('travel-notes.index');
 
-// ── Travel Notes Routes ────────────────────────────────────────────────────
-Route::resource('travel-notes', TravelNoteController::class);
+    Route::get('/create', function () {
+        return view('travel-notes.create');
+    })->name('travel-notes.create');
 
-// ── Comments Routes ────────────────────────────────────────────────────────
-Route::middleware('auth')->group(function () {
-    Route::post('travel-notes/{travelNote}/comments', [CommentController::class, 'store'])
-        ->name('comments.store');
+    Route::get('/{id}', function ($id) {
+        return view('travel-notes.show', ['id' => $id]);
+    })->name('travel-notes.show');
 
-    Route::delete('travel-notes/{travelNote}/comments/{comment}', [CommentController::class, 'destroy'])
-        ->name('comments.destroy');
+    Route::get('/{id}/edit', function ($id) {
+        return view('travel-notes.edit', ['id' => $id]);
+    })->name('travel-notes.edit');
 });

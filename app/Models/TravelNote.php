@@ -19,22 +19,14 @@ class TravelNote extends Model
         'mood',
         'photo',
     ];
-
+    
     protected $casts = [
         'date' => 'date',
     ];
-
-    /**
-     * The travel note belongs to a user.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * A travel note has many comments.
-     */
     public function comments()
     {
         return $this->hasMany(Comment::class);
