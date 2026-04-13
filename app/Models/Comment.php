@@ -23,9 +23,6 @@ class Comment extends Model
         'created_at' => 'datetime',
     ];
 
-    /**
-     * A comment belongs to a travel note.
-     */
     public function travelNote()
     {
         return $this->belongsTo(TravelNote::class);
