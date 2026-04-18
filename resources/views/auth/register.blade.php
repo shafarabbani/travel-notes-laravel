@@ -6,7 +6,11 @@
 <div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-md">
         <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
-            <div class="bg-gradient-to-br from-violet-600 to-blue-700 px-8 py-8 text-center text-white">
+            <div class="bg-gradient-to-br from-violet-600 to-blue-700 px-8 py-10 text-center text-white relative">
+                <a href="/" class="absolute left-6 top-6 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-xl backdrop-blur-md transition group flex items-center gap-2 text-xs font-bold border border-white/20">
+                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i> 
+                    <span>Beranda</span>
+                </a>
                 <h1 class="text-2xl font-extrabold">Buat akun baru</h1>
                 <p class="text-violet-200 text-sm mt-1">Mulai buku harianmu hari ini</p>
             </div>
