@@ -7,6 +7,7 @@
     <title>@yield('title', 'Buku Perjalanan') — Catatan Perjalanan</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         // Konfigurasi Dasar Axios
@@ -112,11 +113,12 @@
             } catch (e) {} finally {
                 localStorage.removeItem('jwt_token');
                 localStorage.removeItem('user_data');
-                window.location.href = '/login';
+                window.location.href = '/';
             }
         }
 
         updateNav();
+        lucide.createIcons();
     </script>
 </body>
 </html>

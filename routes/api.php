@@ -23,6 +23,7 @@ Route::group([
 
 Route::group(['middleware' => 'auth:api'], function () {
     // Travel Notes
+    Route::post('travel-notes/base64', [TravelNoteController::class, 'storeBase64']);
     Route::apiResource('travel-notes', TravelNoteController::class);
 
     // Comments

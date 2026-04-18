@@ -60,6 +60,67 @@ class TravelNoteController extends Controller
     }
 
     /**
+     * Store a newly created resource using Base64 for the photo.
+     */
+    public function storeBase64(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title'      => 'required|string|max:255',
+            'location'   => 'required|string|max:255',
+            'country'    => 'required|string|max:255',
+            'date'       => 'required|date',
+            'experience' => 'required|string',
+            'mood'       => 'required|in:happy,relaxed,excited,adventurous,other',
+            'photo'      => 'nullable|string', // Berharap string Base64
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $photoPath = null;
+        if ($request->filled('photo')) {
+            $base64Image = $request->photo;
+            
+            // Ekstrak data base64 (menghapus prefix data:image/png;base64,)
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+                $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
+                $type = strtolower($type[1]); // png, jpg, etc
+
+                if (!in_array($type, ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
+                    return response()->json(['photo' => ['Tipe gambar tidak didukung.']], 422);
+                }
+
+                $base64Image = str_replace(' ', '+', $base64Image);
+                $imageData = base64_decode($base64Image);
+                
+                if ($imageData === false) {
+                    return response()->json(['photo' => ['Format Base64 tidak valid.']], 422);
+                }
+
+                $fileName = 'travel-photos/' . uniqid() . '.' . $type;
+                Storage::disk('public')->put($fileName, $imageData);
+                $photoPath = $fileName;
+            }
+        }
+
+        $travelNote = auth('api')->user()->travelNotes()->create([
+            'title'      => $request->title,
+            'location'   => $request->location,
+            'country'    => $request->country,
+            'date'       => $request->date,
+            'experience' => $request->experience,
+            'mood'       => $request->mood,
+            'photo'      => $photoPath,
+        ]);
+
+        return response()->json([
+            'message' => 'Catatan perjalanan (Base64) berhasil ditambahkan!',
+            'data' => $travelNote->load('user')
+        ], 201);
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(TravelNote $travelNote)

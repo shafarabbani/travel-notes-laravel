@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Beranda dialihkan ke daftar catatan
+// Halaman Utama (Landing Page)
 Route::get('/', function () {
-    return redirect('/travel-notes');
+    return view('welcome');
 });
 
 // Rute Autentikasi (Hanya View)
